@@ -48,10 +48,10 @@ t.render(function(){
     ])
   .spread(function(savedUbv, savedTc, savedRroe, savedJs, savedWsjf){
     
-     ubvSelector.value = savedUbv;
-     tcSelector.value = savedTc;
-     rroeSelector.value = savedRroe;
-     jsSelector.value = savedJs;
+     ubvSelector.value = savedUbv ? savedUbv : "";
+     tcSelector.value = savedTc ? savedTc : "";
+     rroeSelector.value = savedRroe ? savedRroe : "";
+     jsSelector.value = savedJs ? savedJs : "";
      wsjfCalc.innerHTML = savedWsjf; 
     
   })

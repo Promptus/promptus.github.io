@@ -33,7 +33,7 @@ TrelloPowerUp.initialize({
     return t.get('card', 'shared',  'wsjf')
     .then(function( wsjf) {
       return [{
-        title: 'WSJF',
+        title: 'RICE',
         text: wsjf  || 'No RICE!',
         color: wsjf ? 'green' : 'red',
         callback: function(t) {
