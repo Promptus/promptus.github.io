@@ -10,10 +10,10 @@ TrelloPowerUp.initialize({
 	'card-buttons': function(t, options) {
 		return [{
 			icon: BLACK_ROCKET_ICON,
-			text: 'WSJF',
+			text: 'RICE',
       callback: function(t) {
         return t.popup({
-          title: "WSJF",
+          title: "RICE",
           url: 'estimate.html',
         });
       }
@@ -24,7 +24,7 @@ TrelloPowerUp.initialize({
     .then(function(wsjf) {
       return [{
         icon:  WHITE_ROCKET_ICON,
-         text: wsjf  || 'No WSJF!',
+         text: wsjf  || 'No RICE!',
         color: wsjf ? 'green' : 'red',
     }];
   });
@@ -34,11 +34,11 @@ TrelloPowerUp.initialize({
     .then(function( wsjf) {
       return [{
         title: 'WSJF',
-        text: wsjf  || 'No WSJF!',
+        text: wsjf  || 'No RICE!',
         color: wsjf ? 'green' : 'red',
         callback: function(t) {
           return t.popup({
-            title: "WSJF",
+            title: "RICE",
             url: 'estimate.html',
           });
         }

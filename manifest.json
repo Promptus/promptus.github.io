@@ -1,10 +1,10 @@
 {
-  "name": "Weighted Shortest Job First",
-  "details":"A power-up to calculate WSJF for a card",
+  "name": "RICE Scoring by Promptus",
+  "details":"A power-up to calculate RICE for a card",
   "icon": {
     "url": "priority.png"
   },
-  "author": "Bill Hennessy",
+  "author": "Simon Brueckner",
   "capabilities": [
     "callback",
     "card-buttons",
