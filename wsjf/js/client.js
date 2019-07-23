@@ -22,11 +22,13 @@ TrelloPowerUp.initialize({
   'card-badges': function(t, options) {
     return t.get('card', 'shared',  'wsjf')
     .then(function(wsjf) {
+      if (wsjf) {
       return [{
         icon:  WHITE_ROCKET_ICON,
-         text: wsjf  || 'No RICE',
+         text: wsjf  || 'No RICE!',
         color: wsjf ? 'green' : 'red',
     }];
+  }
   });
           },
    'card-detail-badges': function(t, options) {
@@ -34,7 +36,7 @@ TrelloPowerUp.initialize({
     .then(function( wsjf) {
       return [{
         title: 'RICE',
-        text: wsjf  || 'No RICE',
+        text: wsjf  || 'No RICE!',
         color: wsjf ? 'green' : 'red',
         callback: function(t) {
           return t.popup({
