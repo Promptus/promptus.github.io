@@ -24,7 +24,7 @@ TrelloPowerUp.initialize({
     .then(function(wsjf) {
       return [{
         icon:  WHITE_ROCKET_ICON,
-         text: wsjf  || 'No RICE!',
+         text: wsjf  || 'No RICE',
         color: wsjf ? 'green' : 'red',
     }];
   });
@@ -34,7 +34,7 @@ TrelloPowerUp.initialize({
     .then(function( wsjf) {
       return [{
         title: 'RICE',
-        text: wsjf  || 'No RICE!',
+        text: wsjf  || '',
         color: wsjf ? 'green' : 'red',
         callback: function(t) {
           return t.popup({
