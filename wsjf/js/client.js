@@ -22,13 +22,11 @@ TrelloPowerUp.initialize({
   'card-badges': function(t, options) {
     return t.get('card', 'shared',  'wsjf')
     .then(function(wsjf) {
-      if (wsjf) (
-        return [{
-          icon:  WHITE_ROCKET_ICON,
-            text: wsjf  || 'No RICE',
-          color: wsjf ? 'green' : 'red',
-      }];
-    )
+      return [{
+        icon:  WHITE_ROCKET_ICON,
+         text: wsjf  || 'No RICE',
+        color: wsjf ? 'green' : 'red',
+    }];
   });
           },
    'card-detail-badges': function(t, options) {
