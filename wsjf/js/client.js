@@ -22,20 +22,21 @@ TrelloPowerUp.initialize({
   'card-badges': function(t, options) {
     return t.get('card', 'shared',  'wsjf')
     .then(function(wsjf) {
-      return [{
-        icon:  WHITE_ROCKET_ICON,
-         text: wsjf  || 'No RICE',
-        color: wsjf ? 'green' : 'red',
-    }];
+      if (wsjf) (
+        return [{
+          icon:  WHITE_ROCKET_ICON,
+            text: wsjf  || 'No RICE',
+          color: wsjf ? 'green' : 'red',
+      }];
+    )
   });
           },
    'card-detail-badges': function(t, options) {
     return t.get('card', 'shared',  'wsjf')
     .then(function( wsjf) {
-      if (wsjf) (
       return [{
         title: 'RICE',
-        text: wsjf  || '',
+        text: wsjf  || 'No RICE',
         color: wsjf ? 'green' : 'red',
         callback: function(t) {
           return t.popup({
@@ -43,7 +44,7 @@ TrelloPowerUp.initialize({
             url: 'estimate.html',
           });
         }
-      }])
+      }]
     });
   },
   'show-settings': function(t, options){
