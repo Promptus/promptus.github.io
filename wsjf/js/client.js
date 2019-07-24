@@ -6,6 +6,19 @@ var BLACK_ROCKET_ICON = 'https://cdn.glitch.com/1b42d7fe-bda8-4af8-a6c8-eff0cea9
 var GREY_ROCKET_ICON = 'https://cdn.glitch.com/c69415fd-f70e-4e03-b43b-98b8960cd616%2Frocket-ship-grey.png?1496162964717';
 var WHITE_ROCKET_ICON = 'https://cdn.glitch.com/c69415fd-f70e-4e03-b43b-98b8960cd616%2Fwhite-rocket-ship.png?1495811896182';
 
+function getColorForScore(score) {
+  //yellow, purple, blue, red, green, orange, black, sky, pink, lime
+  if (score >= 5) {
+    return 'green';
+  } else if (score >= 1) {
+    return 'lime';
+  } else if (score >= 0.5) {
+    return 'yellow';
+  } else {
+    return 'orange';
+  }
+}
+
 TrelloPowerUp.initialize({
 	'card-buttons': function(t, options) {
 		return [{
@@ -26,7 +39,7 @@ TrelloPowerUp.initialize({
       return [{
         icon:  WHITE_ROCKET_ICON,
          text: wsjf  || 'No RICE!',
-        color: wsjf ? 'green' : 'red',
+        color: wsjf ? getColorForScore(wsjf) : 'red',
     }];
   }
   });
@@ -37,7 +50,7 @@ TrelloPowerUp.initialize({
       return [{
         title: 'RICE',
         text: wsjf  || 'No RICE!',
-        color: wsjf ? 'green' : 'red',
+        color: wsjf ? getColorForScore(wsjf) : 'red',
         callback: function(t) {
           return t.popup({
             title: "RICE",

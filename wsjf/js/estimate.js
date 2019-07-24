@@ -25,7 +25,6 @@ document.getElementById('save').addEventListener('click', function(){
     
     var wsjfval = ((ubvSelector.value*tcSelector.value*rroeSelector.value)/jsSelector.value)
     return t.set('card', 'shared',  'wsjf', Number.parseFloat(wsjfval).toFixed(1))
-    //return t.set('card', 'shared',  'wsjf', (parseFloat(Math.round(wsjfval) * 100) / 10000).toFixed(2))
   
   })
   .then(function(){
