@@ -2,9 +2,9 @@ console.log('here');
 
 var Promise = TrelloPowerUp.Promise;
 
-var BLACK_ROCKET_ICON = 'https://http://promptus.github.io/wsjf/img/rice_black.svg';
-var GREY_ROCKET_ICON = 'https://http://promptus.github.io/wsjf/img/rice_gray.svg';
-var WHITE_ROCKET_ICON = 'https://http://promptus.github.io/wsjf/img/rice_white.svg';
+var BLACK_ROCKET_ICON = 'https://promptus.github.io/wsjf/img/rice_black.svg';
+var GREY_ROCKET_ICON = 'https://promptus.github.io/wsjf/img/rice_gray.svg';
+var WHITE_ROCKET_ICON = 'https://promptus.github.io/wsjf/img/rice_white.svg';
 
 function getColorForScore(score) {
   //yellow, purple, blue, red, green, orange, black, sky, pink, lime
