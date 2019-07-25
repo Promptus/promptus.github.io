@@ -24,7 +24,7 @@ document.getElementById('save').addEventListener('click', function(){
   .then(function(){
     
     var wsjfval = ((ubvSelector.value*tcSelector.value*rroeSelector.value)/jsSelector.value)
-    if Number.isNaN(wsjfval) {
+    if (Number.isNaN(wsjfval)) {
       return t.set('card', 'shared',  'wsjf', false)  
     }
     else {
