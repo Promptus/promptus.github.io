@@ -24,8 +24,12 @@ document.getElementById('save').addEventListener('click', function(){
   .then(function(){
     
     var wsjfval = ((ubvSelector.value*tcSelector.value*rroeSelector.value)/jsSelector.value)
-    return t.set('card', 'shared',  'wsjf', Number.parseFloat(wsjfval).toFixed(1))
-  
+    if Number.isNaN(wsjfval) {
+      return t.set('card', 'shared',  'wsjf', false)  
+    }
+    else {
+      return t.set('card', 'shared',  'wsjf', Number.parseFloat(wsjfval).toFixed(1))
+    }
   })
   .then(function(){
    
