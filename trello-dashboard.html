@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Release Dashboard</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+        media="screen"
+        rel="stylesheet">
+  <style>
+      h1 {font-size:36px; margin-bottom: 40px;}
+      .table {font-size: 26px;}
+      .date {font-weight:bold; text-align:right;white-space: nowrap;}
+      .remaining {font-weight: bold; text-align: center; }
+      .testing span, .upcoming span, .ready span {
+        font-size: 80%;
+        color: #3c763d;
+        padding: 5px;
+        border: 1px solid white;
+        border-radius: 5px;
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+      }
+      
+      .upcoming span {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+      }
+      
+      .ready span {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #fad17d;
+      }
+      
+      a {color: black;}
+      
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Release Dashboard</h1>
+    <table class="table"
+           id="table">
+      <tr>
+        <th class="date">Release</th>
+        <th class="">Remaining</th>
+        <th>Sprint</th>
+        <th>Status</th>
+      </tr>
+    </table>
+    <div id="boards"></div>
+  </div>
+  <script crossorigin="anonymous"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+  <script src="https://api.trello.com/1/client.js?key=ae777dc57a1b37120ed4d508445a1d46"></script> 
+  <script type="text/javascript">
+
+
+
+    const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
+    const LIST_ID_READY = "5abb4fe0c3a47cbdb4645185";
+    const LIST_ID_INTEST = "5abb501d79ccc3446d40a403";
+    const FEATURE_FREEZE_CUSTOM_FIELD_ID = "5cb716d7d341d74a191a04f6";
+
+    var allCards;
+    
+    var loadedUpcoming = function(list) {
+      $.merge(allCards, list);
+      $('.sprintRow').remove();
+      $.each(allCards, function(index, card) {
+        date = "";
+        daysLeft = "";
+        rowClass = "";
+        if (card.due) {
+          var options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+          date = new Date(Date.parse(card.due)).toLocaleDateString("en-EN", options);
+          daysLeft =  Math.round ((  Date.parse(card.due) - new Date()) / 1000 / 60 / 60 / 24);
+          if (daysLeft < 0) {
+            rowClass = "danger";
+          } else if (daysLeft <= 4) {
+            rowClass = "warning";
+          }
+        }
+        
+        boardTag ="<td class='upcoming'><span>Upcoming<\/span><\/td>";
+        
+        if (card.idList == "5abb4fe0c3a47cbdb4645185") {
+        boardTag = "<td class='ready'><span>Ready For Testing<\/span><\/td>";
+        } else if (card.idList == "5abb501d79ccc3446d40a403") {
+        boardTag = "<td class='testing'><span>Testing<\/span><\/td>";
+        }
+        
+        $('#table')
+        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td>" + boardTag + "<\/tr>");
+      });
+      setTimeout(function(){
+        loadInTest();
+      }, 10000)
+    };
+    
+    var loadedReady = function(list) {
+      $.merge(allCards, list);
+      Trello.get(
+        '/lists/' + LIST_ID_UPCOMING + '/cards?customFieldItems=true',
+        loadedUpcoming,
+        function() { console.log("Failed to load boards"); }
+      );
+    }
+    
+    var loadedInTest = function(list) {
+      allCards = list;
+      Trello.get(
+        '/lists/' + LIST_ID_READY + '/cards?customFieldItems=true',
+        loadedReady,
+        function() { console.log("Failed to load boards"); }
+      );
+    }
+    
+    var loadInTest = function() {
+      Trello.get(
+        '/lists/' + LIST_ID_INTEST + '/cards?customFieldItems=true',
+        loadedInTest,
+        function() { console.log("Failed to load boards"); }
+      );
+    }
+    
+    localStorage.setItem('trello_token', '5628e26a050e09ff933baf555660ae73f4c5ea74d45848e463beb7dfaf0943f1');
+    
+    Trello.authorize({
+      type: "popup",
+      name: "Trello dashboard",
+      scope: {
+        read: true,
+        write: false },
+      expiration: "never",
+      success: loadInTest,
+      error: function() { console.log("Failed authentication"); }
+    });
+  </script>
+</body>
+</html>
