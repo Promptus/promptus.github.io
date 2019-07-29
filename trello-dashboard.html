@@ -86,6 +86,7 @@
 
 
 
+
     const BOARD_ID_QA = "5aba61edbe1a93f0b27b8735";
     const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
     const LIST_ID_READY = "5abb4fe0c3a47cbdb4645185";
@@ -127,9 +128,9 @@
           ffDaysLeft =  calculateRemainingDays(ff.value.date)
         }
 
-        if ((daysLeft != "" && daysLeft < 0) || (ffDaysLeft != "" && ffDaysLeft < 0)) {
+        if ((daysLeft != "" && daysLeft < 0) || (ffDaysLeft != "" && ffDaysLeft < 0 && card.idList == LIST_ID_UPCOMING)) {
             rowClass = "danger";
-          } else if ((daysLeft != "" && daysLeft <= 4) || (ffDaysLeft != "" && ffDaysLeft <= 4)) {
+          } else if ((daysLeft != "" && daysLeft <= 4) || (ffDaysLeft != "" && ffDaysLeft <= 4  && card.idList == LIST_ID_UPCOMING)) {
             rowClass = "warning";
           }
 
