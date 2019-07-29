@@ -8,7 +8,7 @@
   <style>
       h1 {font-size:36px; margin-bottom: 40px;}
       .table {font-size: 26px;}
-      .date {font-weight:bold; text-align:right;white-space: nowrap;}
+      .date {font-weight:normal; text-align:right;white-space: nowrap;}
       .remaining {font-weight: bold; text-align: center; }
       .testing span, .upcoming span, .ready span {
         font-size: 80%;
@@ -34,18 +34,40 @@
       }
       
       a {color: black;}
+
+      .warning {
+        background-color: #fcf8e3;
+        animation-name: warningColor;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes warningColor {
+      0% {
+        background-color: #fcf8e3;
+      }
+      50% {
+        background-color: #fdf4c5;
+      }
+      100% {
+        background-color: #fcf8e3;
+      }
+  }
       
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container-fluid">
     <h1>Release Dashboard</h1>
     <table class="table"
            id="table">
       <tr>
+        <th class="date">Feature Freeze</th>
+        <th class="">Days</th>
         <th class="date">Release</th>
-        <th class="">Remaining</th>
+        <th class="">Days</th>
         <th>Sprint</th>
+        <th>Resp.</th>
         <th>Status</th>
       </tr>
     </table>
@@ -59,41 +81,74 @@
 
 
 
+
+
+
+
+
+    const BOARD_ID_QA = "5aba61edbe1a93f0b27b8735";
     const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
     const LIST_ID_READY = "5abb4fe0c3a47cbdb4645185";
     const LIST_ID_INTEST = "5abb501d79ccc3446d40a403";
     const FEATURE_FREEZE_CUSTOM_FIELD_ID = "5cb716d7d341d74a191a04f6";
 
     var allCards;
+    var boardMembers;
     
+   function parseDate(date) {
+      var options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return new Date(Date.parse(date)).toLocaleDateString("en-EN", options);
+   }
+
+   function calculateRemainingDays(date) {
+      return Math.round ((  Date.parse(date) - new Date()) / 1000 / 60 / 60 / 24);
+   }
+
     var loadedUpcoming = function(list) {
       $.merge(allCards, list);
       $('.sprintRow').remove();
       $.each(allCards, function(index, card) {
         date = "";
-        daysLeft = "";
+        var daysLeft = "";
+        featureFreezeDate = "";
+        var ffDaysLeft = "";
+        var responsibleMember = "";
+
         rowClass = "";
         if (card.due) {
-          var options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-          date = new Date(Date.parse(card.due)).toLocaleDateString("en-EN", options);
-          daysLeft =  Math.round ((  Date.parse(card.due) - new Date()) / 1000 / 60 / 60 / 24);
-          if (daysLeft < 0) {
+          date = parseDate(card.due)
+          daysLeft =  calculateRemainingDays(card.due)
+        }
+
+        if (card.customFieldItems.find(customField => customField.idCustomField === FEATURE_FREEZE_CUSTOM_FIELD_ID)) {
+          console.log(card.customFieldItems)
+          const ff = card.customFieldItems.find(customField => customField.idCustomField === FEATURE_FREEZE_CUSTOM_FIELD_ID)
+          featureFreezeDate = parseDate(ff.value.date)
+          ffDaysLeft =  calculateRemainingDays(ff.value.date)
+        }
+
+        if ((daysLeft != "" && daysLeft < 0) || (ffDaysLeft != "" && ffDaysLeft < 0)) {
             rowClass = "danger";
-          } else if (daysLeft <= 4) {
+          } else if ((daysLeft != "" && daysLeft <= 4) || (ffDaysLeft != "" && ffDaysLeft <= 4)) {
             rowClass = "warning";
           }
-        }
-        
+
         boardTag ="<td class='upcoming'><span>Upcoming<\/span><\/td>";
         
-        if (card.idList == "5abb4fe0c3a47cbdb4645185") {
+        if (card.idList == LIST_ID_READY) {
         boardTag = "<td class='ready'><span>Ready For Testing<\/span><\/td>";
-        } else if (card.idList == "5abb501d79ccc3446d40a403") {
+        } else if (card.idList == LIST_ID_INTEST) {
         boardTag = "<td class='testing'><span>Testing<\/span><\/td>";
         }
         
+        if (boardMembers.find(member => member.id === card.idMembers[0])) {
+          responsibleMember = boardMembers.find(member => member.id === card.idMembers[0]).initials
+        }
+
+        
+
         $('#table')
-        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td>" + boardTag + "<\/tr>");
+        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + featureFreezeDate + "<\/td><td class='remaining'>" + ffDaysLeft + "<\/td><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td><td>" + responsibleMember + "<\/td>" + boardTag + "<\/tr>");
       });
       setTimeout(function(){
         loadInTest();
@@ -126,6 +181,19 @@
       );
     }
     
+  var loadedMembers= function(members) {
+  boardMembers = members;
+  loadInTest()
+  }
+
+    var loadMembers = function() {
+      Trello.get(
+        '/boards/' + BOARD_ID_QA + '/members?fields=id,avatarUrl,initials',
+        loadedMembers,
+        function() { console.log("Failed to load boards"); }
+      );
+    }
+
     localStorage.setItem('trello_token', '5628e26a050e09ff933baf555660ae73f4c5ea74d45848e463beb7dfaf0943f1');
     
     Trello.authorize({
@@ -135,7 +203,7 @@
         read: true,
         write: false },
       expiration: "never",
-      success: loadInTest,
+      success: loadMembers,
       error: function() { console.log("Failed authentication"); }
     });
   </script>
