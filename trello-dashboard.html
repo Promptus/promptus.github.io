@@ -8,7 +8,7 @@
         rel="stylesheet">
   <style>
       tr, td {font-size: 36px}
-      h1 {font-size:50px; margin-bottom: 40px;}
+      h1 {font-size:50px; margin-bottom: 40px;text-align: center}
       .table {font-size: 26px;}
       .date {font-weight:normal; text-align:right;white-space: nowrap;}
       .remaining {font-weight: bold; text-align: center; }
@@ -64,28 +64,6 @@
   <script type="text/javascript">
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const BOARD_ID_QA = "5aba61edbe1a93f0b27b8735";
     const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
     const LIST_ID_READY = "5abb4fe0c3a47cbdb4645185";
@@ -134,7 +112,8 @@
           }
         
         if (ffDaysLeft !="" && card.idList != LIST_ID_UPCOMING) {
-          ffDaysLeft = "🙂"
+          ffDaysLeft = ""
+          featureFreezeDate = ""
         } 
         
         boardTag ="<td class='upcoming'><span>Upcoming<\/span><\/td>";
