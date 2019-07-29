@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>Release Dashboard</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
         media="screen"
         rel="stylesheet">
   <style>
-      h1 {font-size:36px; margin-bottom: 40px;}
+      tr, td {font-size: 36px}
+      h1 {font-size:50px; margin-bottom: 40px;}
       .table {font-size: 26px;}
       .date {font-weight:normal; text-align:right;white-space: nowrap;}
       .remaining {font-weight: bold; text-align: center; }
@@ -35,24 +37,6 @@
       
       a {color: black;}
 
-      .warning {
-        background-color: #fcf8e3;
-        animation-name: warningColor;
-        animation-duration: 2s;
-        animation-iteration-count: infinite;
-      }
-
-      @keyframes warningColor {
-      0% {
-        background-color: #fcf8e3;
-      }
-      50% {
-        background-color: #fdf4c5;
-      }
-      100% {
-        background-color: #fcf8e3;
-      }
-  }
       
   </style>
 </head>
@@ -87,6 +71,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const BOARD_ID_QA = "5aba61edbe1a93f0b27b8735";
     const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
     const LIST_ID_READY = "5abb4fe0c3a47cbdb4645185";
@@ -97,7 +96,7 @@
     var boardMembers;
     
    function parseDate(date) {
-      var options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+      var options = { weekday: 'short', month: 'short', day: '2-digit' };
       return new Date(Date.parse(date)).toLocaleDateString("en-EN", options);
    }
 
@@ -133,7 +132,11 @@
           } else if ((daysLeft != "" && daysLeft <= 4) || (ffDaysLeft != "" && ffDaysLeft <= 4  && card.idList == LIST_ID_UPCOMING)) {
             rowClass = "warning";
           }
-
+        
+        if (ffDaysLeft !="" && card.idList != LIST_ID_UPCOMING) {
+          ffDaysLeft = "🙂"
+        } 
+        
         boardTag ="<td class='upcoming'><span>Upcoming<\/span><\/td>";
         
         if (card.idList == LIST_ID_READY) {
