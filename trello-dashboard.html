@@ -10,7 +10,7 @@
       tr, td {font-size: 36px}
       h1 {font-size:50px; margin-bottom: 40px;text-align: center}
       .table {font-size: 26px;}
-      .date {font-weight:normal; text-align:right;white-space: nowrap;}
+      .date {font-weight:normal; text-align:right;white-space: nowrap;display:none}
       .remaining {font-weight: bold; text-align: center; }
       .testing span, .upcoming span, .ready span {
         font-size: 80%;
@@ -21,8 +21,20 @@
         color: #3c763d;
         background-color: #dff0d8;
         border-color: #d6e9c6;
+        white-space: nowrap;
       }
       
+
+      .table>tbody>tr.ready ~ tr.upcoming>td {
+        border-color: #ddd;
+        border-width: 5px;
+      }
+
+      .table>tbody>tr.upcoming ~ tr.upcoming>td {
+        border-color: #ddd;
+        border-width: 1px;
+      }
+
       .upcoming span {
         color: #31708f;
         background-color: #d9edf7;
@@ -35,7 +47,7 @@
         border-color: #fad17d;
       }
       
-      a {color: black;}
+      a, a:hover {color: black; text-decoration: none}
 
       
   </style>
@@ -47,9 +59,9 @@
            id="table">
       <tr>
         <th class="date">Feature Freeze</th>
-        <th class="">Days</th>
+        <th class="">Freeze</th>
         <th class="date">Release</th>
-        <th class="">Days</th>
+        <th class="">Release</th>
         <th>Sprint</th>
         <th>Resp.</th>
         <th>Status</th>
@@ -111,17 +123,23 @@
             rowClass = "warning";
           }
         
-        if (card.idList != LIST_ID_UPCOMING) {
-          ffDaysLeft = ""
+           boardTag = "";
+
+        if (card.idList == LIST_ID_UPCOMING) {
+          rowClass += " upcoming"
+          boardTag ="Upcoming"
+        }  else if (card.idList == LIST_ID_READY) {
+          ffDaysLeft = "–"
           featureFreezeDate = ""
-        } 
-        
-        boardTag ="<td class='upcoming'><span>Upcoming<\/span><\/td>";
-        
-        if (card.idList == LIST_ID_READY) {
-        boardTag = "<td class='ready'><span>Ready For Testing<\/span><\/td>";
+          
+          rowClass += " ready";
+          boardTag = "Ready For Testing";
         } else if (card.idList == LIST_ID_INTEST) {
-        boardTag = "<td class='testing'><span>Testing<\/span><\/td>";
+          ffDaysLeft = "–"
+          featureFreezeDate = ""
+          
+          rowClass += " testing"
+          boardTag = "Testing";
         }
         
         if (boardMembers.find(member => member.id === card.idMembers[0])) {
@@ -131,7 +149,7 @@
         
 
         $('#table')
-        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + featureFreezeDate + "<\/td><td class='remaining'>" + ffDaysLeft + "<\/td><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td><td>" + responsibleMember + "<\/td>" + boardTag + "<\/tr>");
+        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + featureFreezeDate + "<\/td><td class='remaining'>" + ffDaysLeft + "<\/td><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td><td>" + responsibleMember + "<\/td><td><span>" + boardTag + "<\/span><\/td><\/tr>");
       });
       setTimeout(function(){
         loadInTest();
