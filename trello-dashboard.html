@@ -12,6 +12,7 @@
       .table {font-size: 26px;}
       .date {font-weight:normal; text-align:right;white-space: nowrap;display:none}
       .remaining {font-weight: bold; text-align: center; }
+      .responsible {white-space: nowrap}
       .testing span, .upcoming span, .ready span {
         font-size: 80%;
         color: #3c763d;
@@ -59,10 +60,10 @@
            id="table">
       <tr>
         <th class="date">Feature Freeze</th>
-        <th class="">Freeze</th>
         <th class="date">Release</th>
-        <th class="">Release</th>
         <th>Sprint</th>
+        <th class="">Freeze</th>
+        <th class="">Release</th>
         <th>Resp.</th>
         <th>Status</th>
       </tr>
@@ -74,9 +75,6 @@
         src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
   <script src="https://api.trello.com/1/client.js?key=ae777dc57a1b37120ed4d508445a1d46"></script> 
   <script type="text/javascript">
-
-
-
 
     const BOARD_ID_QA = "5aba61edbe1a93f0b27b8735";
     const LIST_ID_UPCOMING = "5abb50892a0be9845d2b6481";
@@ -113,12 +111,10 @@
         }
 
         if (card.customFieldItems.find(customField => customField.idCustomField === FEATURE_FREEZE_CUSTOM_FIELD_ID)) {
-          console.log(card.customFieldItems)
           const ff = card.customFieldItems.find(customField => customField.idCustomField === FEATURE_FREEZE_CUSTOM_FIELD_ID)
           featureFreezeDate = parseDate(ff.value.date)
           ffDaysLeft =  calculateRemainingDays(ff.value.date)
         }
-        console.log(card.name)
         if ((daysLeft !== "" && daysLeft < 0) || (ffDaysLeft !== "" && ffDaysLeft < 0 && card.idList == LIST_ID_UPCOMING)) {
             rowClass = "danger";
           } else if ((daysLeft !== "" && daysLeft <= 4) || (ffDaysLeft !== "" && ffDaysLeft <= 4  && card.idList == LIST_ID_UPCOMING)) {
@@ -145,13 +141,15 @@
         }
         
         if (boardMembers.find(member => member.id === card.idMembers[0])) {
-          responsibleMember = boardMembers.find(member => member.id === card.idMembers[0]).initials
+          responsibleMembersArray = []
+          card.idMembers.forEach(memberId => responsibleMembersArray.push(boardMembers.find(member => member.id === memberId).initials)) 
+          responsibleMember =  responsibleMembersArray.join(", ")
         }
 
         
 
         $('#table')
-        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + featureFreezeDate + "<\/td><td class='remaining'>" + ffDaysLeft + "<\/td><td class='date'>" + date + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td><td>" + responsibleMember + "<\/td><td><span>" + boardTag + "<\/span><\/td><\/tr>");
+        .append("<tr class='sprintRow " + rowClass + "'><td class='date'>" + featureFreezeDate + "<\/td><td class='date'>" + date + "<\/td><td><a href='" + card.url + "'>" + card.name + "<\/a><\/td><td class='remaining'>" + ffDaysLeft + "<\/td><td class='remaining'>" + daysLeft + "<\/td><td class='responsible'>" + responsibleMember + "<\/td><td><span>" + boardTag + "<\/span><\/td><\/tr>");
       });
       setTimeout(function(){
         loadInTest();
