@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apple Homescreen Width Estimator</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+        $(function() {
+            $('#labelText').keyup(function() {
+                $('#preview').html($('#labelText').val());
+            })
+    });
+  </script>
+  <link charset="utf-8"
+        href="stylesheet.css"
+        rel="stylesheet"
+        type="text/css">
+</head>
+<body>
+  <div class="content">
+    Enter the App Title to estimate if it fits on Apple Homescreen. If it is truncated, it will probably not fit.<br>
+    <br>
+    <input id="labelText"
+         type="text"
+         value="Einstellungen"><br>
+    <br>
+    <div id="icon_placeholder"></div>
+    <div id="preview">
+      Einstellungen
+    </div>
+  </div>;
+</body>
+</html>
